@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+<link href="{{ url_for('static',filename='styles/style.css') }}" rel="stylesheet" type="text/css">
+<meta charset="UTF-8">
+</script>
+<title Spotify Checker></title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+function loading_state(){
+    document.getElementById("loadingdiv").style.visibility = "visible";
+}
+</script>
+<style type="text/css">
+#loadingdiv {
+position: fixed;
+left: 0px;
+visibility: hidden;
+top: 0px;
+width: 100%;
+height: 100%;
+z-index: 1000;
+background: url('/static/loadingimage.gif') no-repeat center center;
+}
+</style>
+
+</head>
+<body>
+    <h1>Checker v0.1</h1>
+    <div id="sp-logo">
+        <img src="https://antidote71.com/wp-content/uploads/2018/11/spotify-logo.png">
+    </div>
+    <div id="account-input">
+        <p id="h-list">Input accounts file:</p>
+        <br>
+        <form action="/file_received" method="POST">
+        <input type="file" name="account-list" value="account-list">
+        <br>
+        <button onclick="loading_state()" id="submit">Submit</button>
+    </form>
+    <div id="loadingdiv"></div>
+</body>

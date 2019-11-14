@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<head>
+   <link href="{{ url_for('static',filename='styles/style.css') }}" rel="stylesheet" type="text/css">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+   <meta charset="UTF-8">
+</head>
+{% block body %}
+<h5>Accounts</h5>
+{%for i in account %}
+    <div id="accounts-container">
+        {% if i[2] == "False" %}
+            {{i[0]}} : {{i[1]}} : <i class="material-icons">remove_circle</i>
+        {% else %}
+        {{i[0]}} : {{i[1]}} : <i class="material-icons">check_circle</i> : {{i[2]}}
+        {% endif %}
+    </div>
+{% endfor %}
+{% endblock %}
