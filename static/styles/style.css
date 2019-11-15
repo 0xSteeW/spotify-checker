@@ -2,8 +2,11 @@
 h1{text-align: center; background-color: rgb(26, 170, 26); color: white}
 h5{text-align: center; background-color: rgb(26, 170, 26); color: white}
 #sp-logo{opacity: 0.4; text-align: center;}
-body{background-color: green}
-#account-input{position: fixed; margin-left: 42%}
+body{background-color: green !important}
+#account-input{position: fixed; justify-content: center;}
 #h-list{background-color: rgb(26, 170, 26); display: inline; padding-top: 10px; padding-left: 10px; padding-right: 10px;clear: both; border-radius: 4px; padding-left: 5px; padding-right: 5px; color: white}
 #submit{background-color: rgb(26, 170, 26); height: 60%}
 #accounts-container{background-color: rgb(26, 170, 26); color: white; text-align: center}
+li{
+    display: block;
+}
