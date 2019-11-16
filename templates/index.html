@@ -41,10 +41,10 @@ background: url('/static/loadingimage.gif') no-repeat center center;
     <div class="center">
         <p id="h-list">Input accounts file:</p>
         <br>
-        <form action="/file_received" method="POST">
-        <input type="file" name="account-list" value="account-list">
+        <form action="/file_received" method="POST" enctype = "multipart/form-data">
+        <input type="file" name="file">
         <br>
-        <button onclick="loading_state()" id="submit">Submit</button>
+        <input type="submit" onclick="loading_state()">
     </form>
     <div id="loadingdiv"></div>
     <br>
